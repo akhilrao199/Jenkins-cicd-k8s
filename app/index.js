@@ -13,17 +13,3 @@ app.listen(PORT, () => {
 });
 ```
 
-### `app/package.json`
-```json
-{
-  "name": "cicd-app",
-  "version": "1.0.0",
-  "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Dummy test passed!\" && exit 0"
-  },
-  "dependencies": {
-    "express": "^4.18.2"
-  }
-}
-```
