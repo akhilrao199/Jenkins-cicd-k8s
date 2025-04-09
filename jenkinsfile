@@ -1,0 +1,52 @@
+pipeline {
+  agent any
+
+  environment {
+    IMAGE = "your-dockerhub-username/cicd-app:latest"
+  }
+
+  stages {
+    stage('Clone') {
+      steps {
+        git url: 'https://github.com/your-user/jenkins-cicd-k8s.git'
+      }
+    }
+
+    stage('Install & Test') {
+      steps {
+        dir('app') {
+          sh 'npm install'
+          sh 'npm test'
+        }
+      }
+    }
+
+    stage('Docker Build & Push') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+          sh '''
+            docker login -u $USER -p $PASS
+            docker build -t $IMAGE .
+            docker push $IMAGE
+          '''
+        }
+      }
+    }
+
+    stage('Deploy to K8s') {
+      steps {
+        sh 'kubectl apply -f k8s/deployment.yaml'
+        sh 'kubectl apply -f k8s/service.yaml'
+      }
+    }
+  }
+
+  post {
+    success {
+      echo '✅ Deployment succeeded.'
+    }
+    failure {
+      echo '❌ Deployment failed.'
+    }
+  }
+}
