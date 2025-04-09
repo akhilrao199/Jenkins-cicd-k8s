@@ -9,4 +9,4 @@ This project automates:
 4. Building Docker image
 5. Pushing image to DockerHub
 6. Deploying the app to Kubernetes
-
+(((https://chatgpt.com/share/67f5fb56-1f04-8001-aa48-c78a956a9906)))
